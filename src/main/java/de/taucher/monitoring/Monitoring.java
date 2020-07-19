@@ -32,6 +32,11 @@ public class Monitoring {
 	}
 	
 	public MonitoredInstance createInstance(String host, int port, MessageChannel notify) {
+		for(MonitoredInstance mi : monitors) {
+			if(mi.getHost().equals(host) && mi.getPort() == port && mi.getChannel().getIdLong() == notify.getIdLong()) {
+				return null;
+			}
+		}
 		MonitoredInstance mi = new MonitoredInstance(host, port, notify);
 		monitors.add(mi);
 		return mi;

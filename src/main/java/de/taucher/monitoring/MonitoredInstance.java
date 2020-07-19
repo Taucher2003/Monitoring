@@ -49,4 +49,16 @@ public class MonitoredInstance {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getHost() {
+		return host;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	public MessageChannel getChannel() {
+		return channel;
+	}
 }
