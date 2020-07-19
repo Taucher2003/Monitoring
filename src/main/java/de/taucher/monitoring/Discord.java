@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Discord {
 
@@ -12,6 +13,7 @@ public class Discord {
 	
 	Discord(String token) {
 		JDABuilder builder = JDABuilder.createLight(token);
+		builder.enableIntents(GatewayIntent.DIRECT_MESSAGES);
 		try {
 			jda = builder.build();
 			jda.awaitReady();

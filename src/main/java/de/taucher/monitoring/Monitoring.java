@@ -1,5 +1,6 @@
 package de.taucher.monitoring;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Monitoring {
 		constants = new Constants();
 		discord = new Discord(constants.botToken);
 		monitors = new LinkedList<>();
+		createInstance("Vrox", "rp.vrox.eu", 25565, discord.getJDA().retrieveUserById(444889694002741249L).complete().openPrivateChannel().complete());
 	}
 	
 	public static Monitoring getInstance() {
@@ -31,13 +33,13 @@ public class Monitoring {
 		return discord;
 	}
 	
-	public MonitoredInstance createInstance(String host, int port, MessageChannel notify) {
+	public MonitoredInstance createInstance(String name, String host, int port, MessageChannel... notify) {
 		for(MonitoredInstance mi : monitors) {
-			if(mi.getHost().equals(host) && mi.getPort() == port && mi.getChannel().getIdLong() == notify.getIdLong()) {
+			if(mi.getHost().equals(host) && mi.getPort() == port && Arrays.asList(mi.getChannels()).containsAll(Arrays.asList(notify))) {
 				return null;
 			}
 		}
-		MonitoredInstance mi = new MonitoredInstance(host, port, notify);
+		MonitoredInstance mi = new MonitoredInstance(name, host, port, notify);
 		monitors.add(mi);
 		return mi;
 	}
