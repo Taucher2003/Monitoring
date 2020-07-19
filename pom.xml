@@ -1,20 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.taucher</groupId>
-  <artifactId>monitoring</artifactId>
-  <version>1.0.0</version>
-  <packaging>jar</packaging>
+	<groupId>de.taucher</groupId>
+	<artifactId>monitoring</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
 
-  <name>monitoring</name>
-  <url>http://maven.apache.org</url>
+	<name>monitoring</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <dependencies>
-    
-  </dependencies>
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<name>JitPack</name>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>jcenter</id>
+			<name>JCenter</name>
+			<url>https://jcenter.bintray.com</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.dv8tion</groupId>
+			<artifactId>JDA</artifactId>
+			<version>LATEST</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 </project>
