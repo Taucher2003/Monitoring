@@ -92,7 +92,7 @@ public class MonitoredInstance {
 						Monitoring.getInstance().updateMessage(message);
 					});
 					Arrays.asList(channels).forEach(messagechannel -> {
-						messagechannel.sendMessage(reach.setFooter("Timestamp • "+format.format(new Date())).build()).queue();
+						messagechannel.sendMessage(bad.setFooter("Timestamp • "+format.format(new Date())).build()).queue();
 					});
 				}
 				if(reachable == 3 && wasReachable != reachable) {
