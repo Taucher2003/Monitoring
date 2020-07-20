@@ -13,7 +13,8 @@ public class Discord {
 	
 	Discord(String token) {
 		JDABuilder builder = JDABuilder.createLight(token);
-		builder.enableIntents(GatewayIntent.DIRECT_MESSAGES);
+		builder.enableIntents(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES);
+		builder.addEventListeners(new MessageReceivedListener());
 		try {
 			jda = builder.build();
 			jda.awaitReady();
