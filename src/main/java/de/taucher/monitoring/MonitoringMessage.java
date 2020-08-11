@@ -22,21 +22,23 @@ public class MonitoringMessage {
 	}
 	
 	void update() {
-		StringBuilder desc = new StringBuilder(category != null ? ":satellite: **" + category + "**\n\n" : ":satellite: **Statusübersicht**\n\n");
-		int color = 0x15d11c;
-		
-		for(MonitoredInstance mi : instances) {
-			String emoji = mi.getStatus() == 1 ? OK_SYMBOL : mi.getStatus() == 2 ? BAD_SYMBOL : FAIL_SYMBOL;
-			desc.append(emoji + " " + mi.getDisplayName() + "\n\n");
-		}
-//		if(desc.toString().contains(BAD_SYMBOL)) {
-//			color = 0xec6602;
-//		}
-		if(desc.toString().contains(FAIL_SYMBOL)) {
-			color = 0xd11a15;
-		}
-		
-		message.editMessage(builder.setDescription(desc.toString()).setColor(color).build()).queue();
+		try {
+			StringBuilder desc = new StringBuilder(category != null ? ":satellite: **" + category + "**\n\n" : ":satellite: **Statusübersicht**\n\n");
+			int color = 0x15d11c;
+			
+			for(MonitoredInstance mi : instances) {
+				String emoji = mi.getStatus() == 1 ? OK_SYMBOL : mi.getStatus() == 2 ? BAD_SYMBOL : FAIL_SYMBOL;
+				desc.append(emoji + " " + mi.getDisplayName() + "\n\n");
+			}
+	//		if(desc.toString().contains(BAD_SYMBOL)) {
+	//			color = 0xec6602;
+	//		}
+			if(desc.toString().contains(FAIL_SYMBOL)) {
+				color = 0xd11a15;
+			}
+			
+			message.editMessage(builder.setDescription(desc.toString()).setColor(color).build()).queue();
+		}catch(Exception e) {}
 	}
 	
 	public Message getMessage() {
