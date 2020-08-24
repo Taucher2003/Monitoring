@@ -35,18 +35,21 @@ public class Monitoring {
 		mysql.update("CREATE TABLE IF NOT EXISTS CurrentStats(system varchar(255), online bigint, offline bigint, PRIMARY KEY(system))");
 		mysql.update("CREATE TABLE IF NOT EXISTS Stats(system varchar(255), month varchar(10), online bigint, offline bigint, PRIMARY KEY(system, month))");
 		mysql.update("CREATE TABLE IF NOT EXISTS StatsDaily(system varchar(255), day varchar(10), online bigint, offline bigint, PRIMARY KEY(system, day))");
+		mysql.update("CREATE TABLE IF NOT EXISTS Data(type varchar(255), value varchar(999), PRIMARY KEY(type))");
 		
 		MessageChannel taucherPrivate = discord.getJDA().retrieveUserById(444889694002741249L).complete().openPrivateChannel().complete();
 		MessageChannel lukPrivate = discord.getJDA().retrieveUserById(414445757408477205L).complete().openPrivateChannel().complete();
+		MessageChannel markusPrivate = discord.getJDA().retrieveUserById(280811683838951425L).complete().openPrivateChannel().complete();
+		MessageChannel sturmiPrivate = discord.getJDA().retrieveUserById(231878626226864128L).complete().openPrivateChannel().complete();
 		
-		MonitoredInstance root = createInstance("Vrox Rootserver", "Hostserver", "rp.vrox.eu", 22, taucherPrivate);
-		MonitoredInstance bungee = createInstance("Vrox Bungeecord", "Bungeecord", "rp.vrox.eu", 25565, taucherPrivate);
-		MonitoredInstance bau = createInstance("Vrox Bauserver", "Bauserver", "rp.vrox.eu", 25544, taucherPrivate);
-		MonitoredInstance ts = createInstance("Vrox TeamSpeak", "TeamSpeak", "rp.vrox.eu", 10011, taucherPrivate);
+		MonitoredInstance root = createInstance("Vrox Rootserver", "Hostserver", "rp.vrox.eu", 22, taucherPrivate, sturmiPrivate);
+		MonitoredInstance bungee = createInstance("Vrox Bungeecord", "Bungeecord", "rp.vrox.eu", 25565, taucherPrivate, sturmiPrivate);
+		MonitoredInstance bau = createInstance("Vrox Bauserver", "Bauserver", "rp.vrox.eu", 25544, taucherPrivate, sturmiPrivate);
+		MonitoredInstance ts = createInstance("Vrox TeamSpeak", "TeamSpeak", "rp.vrox.eu", 10011, taucherPrivate, sturmiPrivate);
 //		MonitoredInstance mysql = createInstance("Vrox Datenbank", "Datenbank", "rp.vrox.eu", 3306, discord.getJDA().retrieveUserById(444889694002741249L).complete().openPrivateChannel().complete());
 
-		createInstance("GameFM Systembot", "Systembot", "134.255.234.15", 2275, taucherPrivate, lukPrivate);
-		createInstance("GameFM Uptimerobot", "Uptime Robot", "134.255.231.232", 2000, taucherPrivate, lukPrivate);
+		createInstance("GameFM Systembot", "Systembot", "92.42.46.66", 2275, taucherPrivate, lukPrivate, markusPrivate);
+		createInstance("GameFM Uptimerobot", "Uptime Robot", "134.255.231.232", 2000, taucherPrivate, lukPrivate, markusPrivate);
 		
 		createInstance("Lostrocket Cloud 01", "cloud-01", "lostrocket.info", 22, taucherPrivate);
 		
@@ -55,6 +58,15 @@ public class Monitoring {
 		
 		messages.forEach(message -> {
 			message.update();
+		});
+		
+		monitors.forEach(monitor -> {
+			for(User u : monitor.getVisibleTo()) {
+				String s = mysql.getFirstResult("SELECT * FROM Data WHERE type = ?", "value", "notify-"+u.getId());
+				if(s == null) {
+					mysql.update("INSERT INTO Data VALUES(?, '')", "notify-"+u.getId());
+				}
+			}
 		});
 	}
 	

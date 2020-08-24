@@ -4,15 +4,22 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public class MonitoredInstance {
 
@@ -113,11 +120,16 @@ public class MonitoredInstance {
 						allDown = false;
 					}
 				}
-				if(allDown && state == 0) {
-					return;
-				}
 				MessageEmbed msg = embeds[state].setFooter("Timestamp • "+format.format(now)).build();
-				for(MessageChannel messagechannel : channels) { 
+				for(MessageChannel messagechannel : channels) {
+					if(allDown && state == 0) {
+						continue;
+					}
+					if(messagechannel instanceof PrivateChannel) {
+						if(!Monitoring.getInstance().getDiscord().isNotifyEnabled(((PrivateChannel) messagechannel).getUser(), this)) {
+							continue;
+						}
+					}
 					try {
 						messagechannel.sendMessage(msg).queue();
 					}catch(Exception e) {}
@@ -201,6 +213,22 @@ public class MonitoredInstance {
 			}
 		}while(reachable < 2);
 		return reachable;
+	}
+	
+	List<User> getVisibleTo() {
+		List<User> list = new ArrayList<>();
+		for(MessageChannel mc : channels) {
+			if(mc instanceof PrivateChannel) {
+				list.add(((PrivateChannel) mc).getUser());
+			}else if(mc instanceof GuildChannel) {
+				GuildChannel gc = (GuildChannel) mc;
+				List<Member> members = gc.getMembers();
+				for(Member m : members) {
+					list.add(m.getUser());
+				}
+			}
+		}
+		return list;
 	}
 	
 }
