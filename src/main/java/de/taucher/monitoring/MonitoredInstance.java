@@ -120,7 +120,7 @@ public class MonitoredInstance {
 						allDown = false;
 					}
 				}
-				MessageEmbed msg = embeds[state].setFooter("Timestamp • "+format.format(now)).build();
+				MessageEmbed msg = embeds[state].setFooter("Ping • "+(end-start)+"ms × Timestamp • "+format.format(now)).build();
 				for(MessageChannel messagechannel : channels) {
 					if(allDown && state == 0) {
 						continue;
@@ -205,7 +205,7 @@ public class MonitoredInstance {
 		Socket socket = new Socket();
 		do {
 			try {
-		       socket.connect(new InetSocketAddress(host, port), (reachable+1) * 5000);
+		       socket.connect(new InetSocketAddress(host, port), (reachable+1) * 10000);
 		       socket.close();
 		       break;
 			}catch(IOException e) {
