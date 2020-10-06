@@ -8,4 +8,6 @@ public class Constants {
 	String mysqlUser = "";
 	String mysqlPass = "";
 	String mysqlDatabase = "";
+	
+	void setInstances() {}
 }
