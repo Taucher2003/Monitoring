@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -36,6 +36,8 @@ public class MonitoredInstance {
 	private int wasReachable = -1;
 
 	private EmbedBuilder embeds[];
+	private Consumer<MonitoredInstance> restarter;
+	private int downCount;
 
 	private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.GERMANY);
 	
@@ -63,6 +65,10 @@ public class MonitoredInstance {
 		embeds[2] = getEmbedBuilder("is no longer reachable", FAIL_SYMBOL, 0xd11a15);
 
 		scheduleCheck();
+	}
+	
+	public void setRestarter(Consumer<MonitoredInstance> restarter) {
+		this.restarter = restarter;
 	}
 
 	private void scheduleCheck() {
@@ -135,6 +141,17 @@ public class MonitoredInstance {
 					}catch(Exception e) {}
 				}
 			}
+		}
+		if(state == 2) {
+			downCount++;
+			if(downCount >= 5) {
+				if(restarter != null) {
+					restarter.accept(this);
+					downCount = 0;
+				}
+			}
+		}else {
+			downCount = 0;
 		}
 		new Timer(true).schedule(new TimerTask() {
 			@Override
